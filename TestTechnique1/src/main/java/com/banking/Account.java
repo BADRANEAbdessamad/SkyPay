@@ -14,6 +14,7 @@ public class Account implements AccountService {
         if (amount <= 0) {
             throw new IllegalArgumentException("Deposit amount must be positive");
         }
+
         balance += amount;
         transactions.add(new Transaction(date, amount, balance));
     }
@@ -22,6 +23,9 @@ public class Account implements AccountService {
     public void withdraw(int amount, String date) {
         if (amount <= 0) {
             throw new IllegalArgumentException("Withdrawal amount must be positive");
+        }
+        if (amount > balance) {
+            throw new IllegalArgumentException("Insufficient balance");
         }
         balance -= amount;
         transactions.add(new Transaction(date, -amount, balance));    }

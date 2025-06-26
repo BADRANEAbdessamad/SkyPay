@@ -72,6 +72,19 @@ public class AccountTest {
 
         assertEquals("Deposit amount must be positive", exception.getMessage());
     }
+    @Test
+    public void cannotWithdrawMoreThanBalance() {
+        account.deposit(500, "14-01-2012");
+
+        IllegalArgumentException exception =
+                org.junit.jupiter.api.Assertions.assertThrows(
+                        IllegalArgumentException.class,
+                        () -> account.withdraw(1000, "15-01-2012")
+                );
+
+        assertEquals("Insufficient balance", exception.getMessage());
+    }
+
 
 
 }

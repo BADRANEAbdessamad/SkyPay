@@ -84,6 +84,81 @@ public class AccountTest {
 
         assertEquals("Insufficient balance", exception.getMessage());
     }
+    @Test
+    public void cannotDepositZeroAmount() {
+        IllegalArgumentException exception =
+                org.junit.jupiter.api.Assertions.assertThrows(
+                        IllegalArgumentException.class,
+                        () -> account.deposit(0, "16-01-2012")
+                );
+
+        assertEquals("Deposit amount must be positive", exception.getMessage());
+    }
+
+    @Test
+    public void cannotWithdrawZeroAmount() {
+        IllegalArgumentException exception =
+                org.junit.jupiter.api.Assertions.assertThrows(
+                        IllegalArgumentException.class,
+                        () -> account.withdraw(0, "17-01-2012")
+                );
+
+        assertEquals("Withdrawal amount must be positive", exception.getMessage());
+    }
+    @Test
+    public void withdrawExactBalance() {
+        account.deposit(1000, "18-01-2012");
+        account.withdraw(1000, "19-01-2012");
+
+        ByteArrayOutputStream output = new ByteArrayOutputStream();
+        System.setOut(new PrintStream(output));
+
+        account.printStatement();
+
+        String actual = output.toString().trim().replace("\r\n", "\n");
+
+        String expected =
+                "Date       | Amount | Balance\n" +
+                        "19-01-2012 | -1000   | 0\n" +
+                        "18-01-2012 | 1000   | 1000";
+
+        assertEquals(expected, actual);
+    }
+    @Test
+    public void printStatementWhenNoTransaction() {
+        ByteArrayOutputStream output = new ByteArrayOutputStream();
+        System.setOut(new PrintStream(output));
+
+        account.printStatement();
+
+        String actual = output.toString().trim().replace("\r\n", "\n");
+
+        String expected = "Date       | Amount | Balance";
+
+        assertEquals(expected, actual);
+    }
+
+    @Test
+    public void fullScenarioPrintsCorrectStatement() {
+        account.deposit(1000, "10-01-2012");
+        account.deposit(2000, "13-01-2012");
+        account.withdraw(500, "14-01-2012");
+
+        ByteArrayOutputStream output = new ByteArrayOutputStream();
+        System.setOut(new PrintStream(output));
+
+        account.printStatement();
+
+        String actual = output.toString().trim().replace("\r\n", "\n");
+
+        String expected =
+                "Date       | Amount | Balance\n" +
+                        "14-01-2012 | -500   | 2500\n" +
+                        "13-01-2012 | 2000   | 3000\n" +
+                        "10-01-2012 | 1000   | 1000";
+
+        assertEquals(expected, actual);
+    }
 
 
 

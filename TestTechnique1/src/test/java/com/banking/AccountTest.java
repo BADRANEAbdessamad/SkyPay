@@ -14,7 +14,7 @@ public class AccountTest {
 
     @BeforeEach
     public void setUp() {
-        account = new Account();
+        account = new Account(new StatementPrinter());
     }
 
     @Test

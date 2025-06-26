@@ -14,7 +14,7 @@ public class AccountTest {
 
     @BeforeEach
     public void setUp() {
-
+        account = new Account();
     }
 
     @Test
@@ -25,11 +25,13 @@ public class AccountTest {
         System.setOut(new PrintStream(output));
 
         account.printStatement();
+        String ln = System.lineSeparator();
 
         String expected =
-                "Date       | Amount | Balance\n" +
+                "Date       | Amount | Balance" +ln+
                         "10-01-2012 | 1000   | 1000";
+        String actual = output.toString().trim();
 
-        assertEquals(expected.trim(), output.toString().trim());
+        assertEquals(expected.trim(), actual);
     }
 }

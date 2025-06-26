@@ -11,6 +11,9 @@ public class Account implements AccountService {
 
     @Override
     public void deposit(int amount, String date) {
+        if (amount <= 0) {
+            throw new IllegalArgumentException("Deposit amount must be positive");
+        }
         balance += amount;
         transactions.add(new Transaction(date, amount, balance));
     }

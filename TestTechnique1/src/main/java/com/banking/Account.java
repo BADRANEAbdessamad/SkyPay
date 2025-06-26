@@ -17,9 +17,8 @@ public class Account implements AccountService {
 
     @Override
     public void withdraw(int amount, String date) {
-        // Pas encore implémenté
-        throw new UnsupportedOperationException("Not implemented yet");
-    }
+        balance -= amount;
+        transactions.add(new Transaction(date, -amount, balance));    }
 
     @Override
     public void printStatement() {

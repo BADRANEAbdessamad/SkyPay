@@ -34,4 +34,23 @@ public class AccountTest {
 
         assertEquals(expected.trim(), actual);
     }
+    @Test
+    public void depositAndWithdrawThenPrintStatement() {
+        account.deposit(1000, "10-01-2012");
+        account.withdraw(200, "11-01-2012");
+
+        ByteArrayOutputStream output = new ByteArrayOutputStream();
+        System.setOut(new PrintStream(output));
+
+        account.printStatement();
+
+        String actual = output.toString().trim().replace("\r\n", "\n");
+        String expected =
+                "Date       | Amount | Balance\n" +
+                        "11-01-2012 | -200   | 800\n" +
+                        "10-01-2012 | 1000   | 1000";
+
+        assertEquals(expected, actual);
+    }
+
 }

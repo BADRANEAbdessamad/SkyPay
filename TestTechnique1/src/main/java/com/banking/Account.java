@@ -17,6 +17,9 @@ public class Account implements AccountService {
 
     @Override
     public void withdraw(int amount, String date) {
+        if (amount <= 0) {
+            throw new IllegalArgumentException("Withdrawal amount must be positive");
+        }
         balance -= amount;
         transactions.add(new Transaction(date, -amount, balance));    }
 

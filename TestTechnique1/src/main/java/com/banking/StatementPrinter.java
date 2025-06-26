@@ -8,10 +8,13 @@ public class StatementPrinter {
 
     public void print(List<Transaction> transactions) {
         System.out.println(HEADER);
+        for (Transaction tx : transactions) {
+            System.out.printf("%s | %s   | %d%n", tx.getDate(), formatAmount(tx.getAmount()), tx.getBalance());
+        }
+    }
 
-        transactions.stream()
-                .sorted((t1, t2) -> t2.getDate().compareTo(t1.getDate())) // ordre inverse
-                .forEach(tx ->
-                        System.out.printf("%s | %d   | %d%n", tx.getDate(), tx.getAmount(), tx.getBalance()));
+    private String formatAmount(int amount) {
+        // Aligne les montants négatifs comme les positifs
+        return String.format("%d", amount);
     }
 }

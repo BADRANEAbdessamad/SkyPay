@@ -62,5 +62,16 @@ public class AccountTest {
 
         assertEquals("Withdrawal amount must be positive", exception.getMessage());
     }
+    @Test
+    public void cannotDepositNegativeAmount() {
+        IllegalArgumentException exception =
+                org.junit.jupiter.api.Assertions.assertThrows(
+                        IllegalArgumentException.class,
+                        () -> account.deposit(-1000, "13-01-2012")
+                );
+
+        assertEquals("Deposit amount must be positive", exception.getMessage());
+    }
+
 
 }

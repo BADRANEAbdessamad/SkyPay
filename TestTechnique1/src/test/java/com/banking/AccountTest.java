@@ -7,6 +7,7 @@ import java.io.ByteArrayOutputStream;
 import java.io.PrintStream;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public class AccountTest {
 
@@ -44,7 +45,7 @@ public class AccountTest {
 
         account.printStatement();
 
-        String actual = output.toString().trim().replace("\r\n", "\n");
+        String actual = this.normalizeOutput(output.toString());
         String expected =
                 "Date       | Amount | Balance\n" +
                         "11-01-2012 | -200   | 800\n" +
@@ -115,7 +116,7 @@ public class AccountTest {
 
         account.printStatement();
 
-        String actual = output.toString().trim().replace("\r\n", "\n");
+        String actual = this.normalizeOutput(output.toString());
 
         String expected =
                 "Date       | Amount | Balance\n" +
@@ -131,13 +132,20 @@ public class AccountTest {
 
         account.printStatement();
 
-        String actual = output.toString().trim().replace("\r\n", "\n");
+        String actual = this.normalizeOutput(output.toString());
 
         String expected = "Date       | Amount | Balance";
 
         assertEquals(expected, actual);
     }
-
+    /**
+     * Teste un scénario complet :
+     * - Dépôt de 1000 le 10-01-2012
+     * - Dépôt de 2000 le 13-01-2012
+     * - Retrait de 500 le 14-01-2012
+     * Le relevé doit afficher les transactions dans l'ordre inverse (du plus récent au plus ancien),
+     * avec le bon solde à chaque ligne.
+     */
     @Test
     public void fullScenarioPrintsCorrectStatement() {
         account.deposit(1000, "10-01-2012");
@@ -149,7 +157,7 @@ public class AccountTest {
 
         account.printStatement();
 
-        String actual = output.toString().trim().replace("\r\n", "\n");
+        String actual = this.normalizeOutput(output.toString());
 
         String expected =
                 "Date       | Amount | Balance\n" +
@@ -158,6 +166,20 @@ public class AccountTest {
                         "10-01-2012 | 1000   | 1000";
 
         assertEquals(expected, actual);
+    }
+    @Test
+    public void printStatementDelegatesToStatementPrinter() {
+        MockStatementPrinter mockPrinter = new MockStatementPrinter();
+        AccountService account = new Account(mockPrinter);
+
+        account.deposit(1000, "01-01-2022");
+        account.printStatement();
+
+        assertTrue(mockPrinter.isPrintCalled());
+        assertEquals(1, mockPrinter.getReceivedTransactions().size());
+    }
+    private String normalizeOutput(String output) {
+        return output.trim().replace("\r\n", "\n");
     }
 
 

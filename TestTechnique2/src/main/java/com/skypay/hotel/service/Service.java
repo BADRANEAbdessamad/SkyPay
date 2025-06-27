@@ -1,4 +1,4 @@
-package com.skypay.hotel;
+package com.skypay.hotel.service;
 
 import com.skypay.hotel.model.*;
 
@@ -28,7 +28,7 @@ public class Service {
     }
 
     public void bookRoom(int userId, int roomNumber, Date checkIn, Date checkOut) {
-        // ⚠️ Vérifications de base
+        //  Vérifications de base
         if (checkIn == null || checkOut == null || !checkIn.before(checkOut)) {
             System.out.println("Invalid date range");
             return;
@@ -51,13 +51,13 @@ public class Service {
         long nights = daysBetween(checkIn, checkOut);
         int totalCost = (int) nights * room.getPricePerNight();
 
-        // 🔒 Vérification de solde
+        //  Vérification de solde
         if (user.getBalance() < totalCost) {
             System.out.println("Insufficient balance");
             return;
         }
 
-        // ⛔ Vérification de disponibilité
+        //  Vérification de disponibilité
         boolean roomAvailable = bookings.stream().noneMatch(b ->
                 b.getRoomSnapshot().getRoomNumber() == roomNumber &&
                         datesOverlap(b.getCheckIn(), b.getCheckOut(), checkIn, checkOut));
@@ -67,7 +67,7 @@ public class Service {
             return;
         }
 
-        // ✅ Réservation valide
+        //  Réservation valide
         user.debit(totalCost);
         bookings.add(new Booking(user, room, checkIn, checkOut));
         System.out.println("Booking successful");

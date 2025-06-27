@@ -28,11 +28,15 @@ public class Service {
     }
 
     public void bookRoom(int userId, int roomNumber, Date checkIn, Date checkOut) {
-        //  Vérifications de base
-        if (checkIn == null || checkOut == null || !checkIn.before(checkOut)) {
-            System.out.println("Invalid date range");
+        if (checkIn == null || checkOut == null) {
+            System.out.println("Invalid date range: one or both dates are null");
             return;
         }
+        if (!checkIn.before(checkOut)) {
+            System.out.println("Invalid date range: check-in must be before check-out");
+            return;
+        }
+
 
         User user = users.stream()
                 .filter(u -> u.getId() == userId)
@@ -44,7 +48,7 @@ public class Service {
                 .orElse(null);
 
         if (user == null || room == null) {
-            System.out.println("User or room not found");
+            System.out.println("User or room not found :RoomID ->"+ roomNumber+" userID ->"+userId);
             return;
         }
 
@@ -53,7 +57,7 @@ public class Service {
 
         //  Vérification de solde
         if (user.getBalance() < totalCost) {
-            System.out.println("Insufficient balance");
+            System.out.println("Insufficient balance for user "+userId);
             return;
         }
 
@@ -114,5 +118,12 @@ public class Service {
 
         long diffMillis = calEnd.getTimeInMillis() - calStart.getTimeInMillis();
         return diffMillis / (1000 * 60 * 60 * 24);
+    }
+
+    public List<Booking> getBookings() {
+        return bookings;
+    }
+    public List<User> getUsers(){
+        return users;
     }
 }
